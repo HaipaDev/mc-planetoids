@@ -15,8 +15,9 @@ import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import org.apache.logging.log4j.Logger;
 import tennox.planetoid.config.PlanetoidConfig;
  
- 
- @Mod(modid = "TeNNoX_Planetoid", name = "Planetoid", version = "0.10.0")
+
+ @Mod(modid = "planetoid", name = "Planetoid", version = "0.10.0")
+
  public class Planetoid
  {
    public static final int ADDITIONAL_SPAWN_TRIES = 0;
@@ -40,17 +41,10 @@ import tennox.planetoid.config.PlanetoidConfig;
    public void prePopulate(PopulateChunkEvent.Pre event) {
 /* 37 */     BlockSand.fallInstantly = false;
    }
- 
- 
- 
- 
- 
- 
- 
- 
+
    
    public static String translate(String string) {
-/* 49 */     return I18n.format(string, new Object[0]);
+/* 49 */     return I18n.format(string);
    }
  }
 
