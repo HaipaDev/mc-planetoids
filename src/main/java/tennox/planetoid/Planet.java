@@ -1,5 +1,4 @@
  package tennox.planetoid;
- 
 
 
 import net.minecraft.block.Block;
@@ -12,12 +11,6 @@ import tennox.planetoid.config.PlanetoidConfig;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
-
-
-
-
-
-
 
 
 

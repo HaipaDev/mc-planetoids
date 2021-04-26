@@ -3,3 +3,4 @@ planetoid.gui.defaultgeneration=Default Generation
 planetoid.gui.minradius=Minimum Radius
 planetoid.gui.maxradius=Maximum Radius
 planetoid.gui.spawntries=Spawntries per Chunk
+planetoid.gui.waterfloor=Water Floor

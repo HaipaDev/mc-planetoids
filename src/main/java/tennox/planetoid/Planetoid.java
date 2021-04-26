@@ -14,7 +14,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import org.apache.logging.log4j.Logger;
 import tennox.planetoid.config.PlanetoidConfig;
- 
+
 
  @Mod(modid = "planetoid", name = "Planetoid", version = "0.10.0")
 
@@ -47,9 +47,3 @@ import tennox.planetoid.config.PlanetoidConfig;
 /* 49 */     return I18n.format(string);
    }
  }
-
-
-/* Location:              C:\Minecraft Modding\DecompPlanetoid\Planetoid-Mod-1.7.10-deobf.zip!\tennox\planetoid\Planetoid.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       1.1.3
- */

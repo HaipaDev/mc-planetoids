@@ -22,6 +22,7 @@
  import net.minecraft.world.chunk.ChunkPrimer;
  import net.minecraft.world.chunk.IChunkProvider;
  //import net.minecraft.world.gen.ChunkProviderGenerate;
+ import net.minecraft.world.gen.IChunkGenerator;
  import net.minecraft.world.gen.MapGenBase;
  import net.minecraft.world.gen.MapGenCaves;
  import net.minecraft.world.gen.MapGenRavine;
@@ -50,6 +51,7 @@
    long seed;
    World world;
    boolean mapFeaturesEnabled;
+   String generatorOptions;
    private double[] noiseField;
 /*  51 */   ArrayList<Planet> finished = new ArrayList<Planet>();
 /*  52 */   ArrayList<Planet> unfinished = new ArrayList<Planet>();
@@ -70,18 +72,18 @@
  
    
    private List<Biome> biomesForGeneration;
- 
 
-   public PlanetoidChunkManager(World w) {
-/*  76 */     this(w, w.getSeed(), true, w.getWorldInfo().getGeneratorOptions());
-   }
-   
+
+ public PlanetoidChunkManager(World w) {
+     /*  76 */     this(w, w.getSeed(), true, w.getWorldInfo().getGeneratorOptions());
+     /*     */   }
    public PlanetoidChunkManager(World w, long s, boolean mapfeatures, String generatorOptions) {
-/*  80 */     super(w,0,0);this.caveGenerator = TerrainGen.getModdedMapGen(this.caveGenerator, InitMapGenEvent.EventType.CAVE); this.strongholdGenerator = (MapGenStronghold)TerrainGen.getModdedMapGen((MapGenBase)this.strongholdGenerator, InitMapGenEvent.EventType.STRONGHOLD); this.villageGenerator = (MapGenVillage)TerrainGen.getModdedMapGen((MapGenBase)this.villageGenerator, InitMapGenEvent.EventType.VILLAGE); this.mineshaftGenerator = (MapGenMineshaft)TerrainGen.getModdedMapGen((MapGenBase)this.mineshaftGenerator, InitMapGenEvent.EventType.MINESHAFT); this.scatteredFeatureGenerator = (MapGenScatteredFeature)TerrainGen.getModdedMapGen((MapGenBase)this.scatteredFeatureGenerator, InitMapGenEvent.EventType.SCATTERED_FEATURE); this.ravineGenerator = TerrainGen.getModdedMapGen(this.ravineGenerator, InitMapGenEvent.EventType.RAVINE);
+/*  80 */     super(w);this.caveGenerator = TerrainGen.getModdedMapGen(this.caveGenerator, InitMapGenEvent.EventType.CAVE); this.strongholdGenerator = (MapGenStronghold)TerrainGen.getModdedMapGen((MapGenBase)this.strongholdGenerator, InitMapGenEvent.EventType.STRONGHOLD); this.villageGenerator = (MapGenVillage)TerrainGen.getModdedMapGen((MapGenBase)this.villageGenerator, InitMapGenEvent.EventType.VILLAGE); this.mineshaftGenerator = (MapGenMineshaft)TerrainGen.getModdedMapGen((MapGenBase)this.mineshaftGenerator, InitMapGenEvent.EventType.MINESHAFT); this.scatteredFeatureGenerator = (MapGenScatteredFeature)TerrainGen.getModdedMapGen((MapGenBase)this.scatteredFeatureGenerator, InitMapGenEvent.EventType.SCATTERED_FEATURE); this.ravineGenerator = TerrainGen.getModdedMapGen(this.ravineGenerator, InitMapGenEvent.EventType.RAVINE);
 /*  81 */     this.world = w;
-/*  82 */     this.seed = s;
-/*  83 */     this.mapFeaturesEnabled = mapfeatures;
+/*  82 */     this.seed = w.getSeed();
+/*  83 */     this.mapFeaturesEnabled = true;
 /*  84 */     this.defaultProvider = new ChunkProviderClient(w);
+                this.generatorOptions=w.getWorldInfo().getGeneratorOptions();
 /*  85 */     this.generatorInfo = PlanetoidGeneratorInfo.createGeneratorFromString(generatorOptions);
 /*  86 */     if (!generatorOptions.equals(""))
 /*  87 */       Planetoid.logger.info("PlanetoidChunkManager initialized with these settings: \"" + this.generatorInfo.toString() + "\""); 
@@ -93,7 +95,7 @@
 
 
 	 @Nullable
-	 @Override
+	 //@Override
 	 public Chunk getLoadedChunk(int i, int i1) {
 		 return null;
 	 }
@@ -137,7 +139,7 @@
 /* 129 */     return chunk;
    }
 
-	 @Override
+	 //@Override
 	 public boolean tick() {
 		 return false;
 	 }
@@ -285,7 +287,7 @@
 /* 271 */     return "Planetoid";
    }
 
-	 @Override
+	 //@Override
 	 public boolean isChunkGeneratedAt(int i, int i1) {
 		 return false;
 	 }
@@ -331,10 +333,5 @@
    }
    
    public void saveExtraData() {}
+     void getChunkGenerator(World world, String generatorOptions){}
  }
-
-
-/* Location:              C:\Minecraft Modding\DecompPlanetoid\Planetoid-Mod-1.7.10-deobf.zip!\tennox\planetoid\PlanetoidChunkManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       1.1.3
- */
