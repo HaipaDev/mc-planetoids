@@ -37,6 +37,7 @@
  import net.minecraftforge.event.terraingen.InitMapGenEvent;
  import net.minecraftforge.event.terraingen.TerrainGen;
  import net.minecraft.util.math.BlockPos;
+ import org.jetbrains.annotations.NotNull;
 
  import javax.annotation.Nullable;
  import java.awt.*;
@@ -48,31 +49,30 @@
 
 
  public class PlanetoidChunkManager
-         implements IChunkGenerator {
+         implements IChunkGenerator,IChunkProvider {
     Random rand = new Random();
    long seed;
    World world;
    boolean mapFeaturesEnabled;
    String generatorOptions;
-   private double[] noiseField;
-/*  51 */   ArrayList<Planet> finished = new ArrayList<Planet>();
-/*  52 */   ArrayList<Planet> unfinished = new ArrayList<Planet>();
-/*  53 */   ArrayList<Point> pregen = new ArrayList<Point>();
+/*  51 */   ArrayList<Planet> finished = new ArrayList<>();
+/*  52 */   ArrayList<Planet> unfinished = new ArrayList<>();
+/*  53 */   ArrayList<Point> pregen = new ArrayList<>();
 /*  54 */   int pregenChunkSize = 4;
    
    PlanetoidGeneratorInfo generatorInfo;
    
    IChunkProvider defaultProvider;
-/*  59 */   private MapGenBase caveGenerator = (MapGenBase)new MapGenCaves();
+/*  59 */   private MapGenBase caveGenerator = new MapGenCaves();
 /*  60 */   private MapGenStronghold strongholdGenerator = new MapGenStronghold();
 /*  61 */   private MapGenVillage villageGenerator = new MapGenVillage();
 /*  62 */   private MapGenMineshaft mineshaftGenerator = new MapGenMineshaft();
 /*  63 */   private MapGenScatteredFeature scatteredFeatureGenerator = new MapGenScatteredFeature();
-/*  64 */   private MapGenBase ravineGenerator = (MapGenBase)new MapGenRavine();
- 
- 
- 
-   
+/*  64 */   private MapGenBase ravineGenerator = new MapGenRavine();
+
+
+
+
    private List<Biome> biomesForGeneration;
 
 
@@ -99,7 +99,7 @@
 	 @Nullable
 	 //@Override
 	 public Chunk getLoadedChunk(int i, int i1) {
-		 return provideChunk(i,i1);
+		 return new Chunk(world,i,i1);
 	 }
 
 	 public Chunk provideChunk(int par1, int par2) {
@@ -112,7 +112,7 @@
                 //this.biomesForGeneration = this.world.getWorldChunkManager().loadBlockGeneratorData((BiomeProvider[])null, par1 * 16, par2 * 16, 16, 16);
 /* 102 */     this.biomesForGeneration = this.world.getBiomeProvider().getBiomesToSpawnIn();
 
-/* 103 */     generatePlanetoid(par1, par2, ablock, abyte);
+/* 103 */     generateChunk(par1, par2, ablock, abyte);
      
 /* 105 */     TimeAnalyzer.start("provide_default");
      
@@ -128,11 +128,11 @@
 /* 116 */     TimeAnalyzer.end("provide_default");
      
 /* 118 */     Chunk chunk = new Chunk(this.world, par1, par2);
-/* 119 */     /*byte[] abyte1 = chunk.getBiomeArray();
+/* 119 */     byte[] abyte1 = chunk.getBiomeArray();
      
              for (int k = 0; k < abyte1.length; k++) {
             abyte1[k] = (byte)Biome.getIdForBiome(this.biomesForGeneration.get(k));
-             }*/
+             }
      
 /* 125 */     chunk.generateSkylightMap();
  
@@ -201,7 +201,8 @@
 /* 189 */     TimeAnalyzer.end("pregenerate_do");
    }
 
-   public void generatePlanetoid(int chunkX, int chunkZ, Block[] ablock, byte[] ameta) {
+     public Chunk generateChunk(int x,int z){return getLoadedChunk(x,z);}
+     public Chunk generateChunk(int chunkX,int chunkZ, Block[] ablock, byte[] ameta){
 /* 193 */     TimeAnalyzer.start("generate");
      
 /* 195 */     TimeAnalyzer.start("finishPlanets");
@@ -224,12 +225,14 @@
 /* 212 */         for (int z = 0; z < 16; z++) {
 /* 213 */           if(this.generatorInfo.waterFloor)Planet.setBlock(x, y, z, (y == 0) ? Blocks.BEDROCK : Blocks.WATER, 0, ablock, ameta);
 					else {Planet.setBlock(x, y, z, (y == -1) ? Blocks.BEDROCK : Blocks.AIR, 0, ablock, ameta);}
-         }
-       }
-     }
+            }
+            }
+            }
 /* 217 */     TimeAnalyzer.end("generateWater");
      
 /* 219 */     TimeAnalyzer.end("generate");
+
+         return getLoadedChunk(chunkX,chunkZ);
    }
    
    public void populate(int x, int z) {
@@ -292,11 +295,10 @@
     public boolean generateStructures(Chunk c, int i, int j){return false;}
     public void recreateStructures(Chunk c,int i, int j){}
 
+     public boolean tick(){return false;}
+     public String makeString(){return "Planetoid";}
+     public boolean isChunkGeneratedAt(int x,int z){return true;}
 
-   public void cleanupCache() {}
-   public Chunk generateChunk(int x,int z){return getLoadedChunk(x,z);}
-
-   
    public static int round(double d) {
 /* 311 */     return (int)Math.round(d);
    }

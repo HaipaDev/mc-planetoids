@@ -16,8 +16,8 @@ import java.util.Random;
 
  public class Planet
  {
-/*  13 */   static PlanetType DIRT = (new PlanetType(Blocks.DIRT, PlanetoidConfig.dirt, "Dirt")).setTopBlock((Block)Blocks.GRASS);
-/*  14 */   static PlanetType WOOD = new PlanetType((Block)Blocks.LEAVES, Blocks.LOG, PlanetoidConfig.wood, "Wood");
+/*  13 */   static PlanetType DIRT = (new PlanetType(Blocks.DIRT, PlanetoidConfig.dirt, "Dirt")).setTopBlock(Blocks.GRASS);
+/*  14 */   static PlanetType WOOD = new PlanetType(Blocks.LEAVES, Blocks.LOG, PlanetoidConfig.wood, "Wood");
 /*  15 */   static PlanetType WATER = new PlanetType(Blocks.GLASS, Blocks.WATER, PlanetoidConfig.water, "Water");
 /*  16 */   static PlanetType SAND = (new PlanetType(Blocks.SAND, PlanetoidConfig.sand, "sand")).setBottomBlock(Blocks.SANDSTONE);
 /*  17 */   static PlanetType GLOWSTONE = new PlanetType(Blocks.GLOWSTONE, PlanetoidConfig.glowstone, "Glowstone");
@@ -35,7 +35,7 @@ import java.util.Random;
 /*  29 */   static PlanetType DIAMOND = new PlanetType(Blocks.STONE, Blocks.DIAMOND_ORE, PlanetoidConfig.diamond, "Diamond");
 /*  30 */   static PlanetType EMERALD = new PlanetType(Blocks.STONE, Blocks.EMERALD_ORE, PlanetoidConfig.emerald, "Emerald");
    
-/*  32 */   static ArrayList<PlanetType> STONEtypes = new ArrayList<PlanetType>();
+/*  32 */   static ArrayList<PlanetType> STONEtypes = new ArrayList<>();
 /*  33 */   static ArrayList<PlanetType> types = initTypes();
    
 /*  35 */   Random rand = new Random();
@@ -46,8 +46,8 @@ import java.util.Random;
    int z;
    int radius;
    PlanetType type;
-/*  43 */   ArrayList<Point> unfinished = new ArrayList<Point>();
-/*  44 */   ArrayList<Point> finished = new ArrayList<Point>();
+/*  43 */   ArrayList<Point> unfinished = new ArrayList<>();
+/*  44 */   ArrayList<Point> finished = new ArrayList<>();
    
    public Planet(PlanetoidChunkManager cm, World w, int x, int y, int z, int r) {
 /*  47 */     this.chunkManager = cm;
@@ -61,7 +61,7 @@ import java.util.Random;
    }
    
    private static ArrayList<PlanetType> initTypes() {
-/*  58 */     ArrayList<PlanetType> list = new ArrayList<PlanetType>();
+/*  58 */     ArrayList<PlanetType> list = new ArrayList<>();
 /*  59 */     list.add(DIRT);
 /*  60 */     list.add(WOOD);
 /*  61 */     list.add(WATER);
@@ -100,18 +100,16 @@ import java.util.Random;
    
    public PlanetType getRandomPlanet() {
 /*  96 */     this.rand.setSeed(this.x * 341873128712L + this.z * 132897987541L);
+
+              ArrayList<PlanetType> list = new ArrayList<>(types);
      
-/*  98 */     ArrayList<PlanetType> list = new ArrayList<PlanetType>();
-     
-/* 100 */     list.addAll(types);
-     
-/* 102 */     PlanetType type = (PlanetType)WeightedRandom.getRandomItem(this.rand, list);
+/* 102 */     PlanetType type = WeightedRandom.getRandomItem(this.rand, list);
      
 /* 104 */     if (type == STONE) {
 /* 105 */       list.clear();
 /* 106 */       list.addAll(STONEtypes);
        
-/* 108 */       type = (PlanetType)WeightedRandom.getRandomItem(this.rand, list);
+/* 108 */       type = WeightedRandom.getRandomItem(this.rand, list);
      } 
      
 /* 111 */     type.total++;
@@ -142,10 +140,12 @@ import java.util.Random;
        } 
      } 
      
-/* 139 */     if (!this.finished.contains(new Point(chunkX, chunkZ)))
+/* 139 */     if (!this.finished.contains(new Point(chunkX, chunkZ))){
 /* 140 */       this.finished.add(new Point(chunkX, chunkZ)); 
-/* 141 */     if (this.unfinished.contains(new Point(chunkX, chunkZ)))
-/* 142 */       this.unfinished.remove(new Point(chunkX, chunkZ)); 
+/* 141 */     }else {
+           /* 142 */
+                this.unfinished.remove(new Point(chunkX, chunkZ));
+                }
 /* 143 */     TimeAnalyzer.end("generateChunk");
    }
    
