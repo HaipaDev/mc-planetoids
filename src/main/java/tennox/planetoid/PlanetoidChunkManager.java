@@ -13,16 +13,20 @@
  import net.minecraft.world.WorldEntitySpawner;
  import net.minecraft.util.math.ChunkPos;
  import net.minecraft.world.World;
+ import net.minecraft.world.WorldProvider;
  //import net.minecraft.world.biome.BiomeProvider;
  //import net.minecraft.world.biome.WorldChunkManager;
  import net.minecraft.world.biome.Biome;
+ import net.minecraftforge.common.BiomeManager;
+ import net.minecraftforge.common.BiomeManager.BiomeEntry;
+ import net.minecraftforge.event.terraingen.WorldTypeEvent;
  import net.minecraft.world.biome.BiomeProvider;
  //import net.minecraft.world.WorldChunkManager;
  import net.minecraft.world.chunk.Chunk;
  import net.minecraft.world.chunk.ChunkPrimer;
  import net.minecraft.world.chunk.IChunkProvider;
- //import net.minecraft.world.gen.ChunkProviderGenerate;
  import net.minecraft.world.gen.IChunkGenerator;
+ //import net.minecraft.world.gen.ChunkProviderGenerate;
  import net.minecraft.world.gen.MapGenBase;
  import net.minecraft.world.gen.MapGenCaves;
  import net.minecraft.world.gen.MapGenRavine;
@@ -44,9 +48,7 @@
 
 
  public class PlanetoidChunkManager
-   extends Chunk
-   implements IChunkProvider
- {
+         implements IChunkGenerator {
 /*  46 */   Random rand = new Random();
    long seed;
    World world;
@@ -78,9 +80,9 @@
      /*  76 */     this(w, w.getSeed(), true, w.getWorldInfo().getGeneratorOptions());
      /*     */   }
    public PlanetoidChunkManager(World w, long s, boolean mapfeatures, String generatorOptions) {
-/*  80 */     super(w);this.caveGenerator = TerrainGen.getModdedMapGen(this.caveGenerator, InitMapGenEvent.EventType.CAVE); this.strongholdGenerator = (MapGenStronghold)TerrainGen.getModdedMapGen((MapGenBase)this.strongholdGenerator, InitMapGenEvent.EventType.STRONGHOLD); this.villageGenerator = (MapGenVillage)TerrainGen.getModdedMapGen((MapGenBase)this.villageGenerator, InitMapGenEvent.EventType.VILLAGE); this.mineshaftGenerator = (MapGenMineshaft)TerrainGen.getModdedMapGen((MapGenBase)this.mineshaftGenerator, InitMapGenEvent.EventType.MINESHAFT); this.scatteredFeatureGenerator = (MapGenScatteredFeature)TerrainGen.getModdedMapGen((MapGenBase)this.scatteredFeatureGenerator, InitMapGenEvent.EventType.SCATTERED_FEATURE); this.ravineGenerator = TerrainGen.getModdedMapGen(this.ravineGenerator, InitMapGenEvent.EventType.RAVINE);
+/*  80 */     this.caveGenerator = TerrainGen.getModdedMapGen(this.caveGenerator, InitMapGenEvent.EventType.CAVE); this.strongholdGenerator = (MapGenStronghold)TerrainGen.getModdedMapGen((MapGenBase)this.strongholdGenerator, InitMapGenEvent.EventType.STRONGHOLD); this.villageGenerator = (MapGenVillage)TerrainGen.getModdedMapGen((MapGenBase)this.villageGenerator, InitMapGenEvent.EventType.VILLAGE); this.mineshaftGenerator = (MapGenMineshaft)TerrainGen.getModdedMapGen((MapGenBase)this.mineshaftGenerator, InitMapGenEvent.EventType.MINESHAFT); this.scatteredFeatureGenerator = (MapGenScatteredFeature)TerrainGen.getModdedMapGen((MapGenBase)this.scatteredFeatureGenerator, InitMapGenEvent.EventType.SCATTERED_FEATURE); this.ravineGenerator = TerrainGen.getModdedMapGen(this.ravineGenerator, InitMapGenEvent.EventType.RAVINE);
 /*  81 */     this.world = w;
-/*  82 */     this.seed = w.getSeed();
+/*  82 */     this.seed = s;
 /*  83 */     this.mapFeaturesEnabled = true;
 /*  84 */     this.defaultProvider = new ChunkProviderClient(w);
                 this.generatorOptions=w.getWorldInfo().getGeneratorOptions();
@@ -88,11 +90,6 @@
 /*  86 */     if (!generatorOptions.equals(""))
 /*  87 */       Planetoid.logger.info("PlanetoidChunkManager initialized with these settings: \"" + this.generatorInfo.toString() + "\""); 
    }
-
-   public boolean chunkExists(int i, int j) {
-/*  91 */     return true;
-   }
-
 
 	 @Nullable
 	 //@Override
@@ -138,11 +135,6 @@
 /* 128 */     TimeAnalyzer.end("provideChunk");
 /* 129 */     return chunk;
    }
-
-	 //@Override
-	 public boolean tick() {
-		 return false;
-	 }
 
 	 public void preGenerate(int cx, int cz) {
 /* 133 */     TimeAnalyzer.start("pregenerate");
@@ -235,11 +227,7 @@
 /* 219 */     TimeAnalyzer.end("generate");
    }
    
-   public Chunk loadChunk(int par1, int par2) {
-/* 223 */     return provideChunk(par1, par2);
-   }
-   
-   public void populate(IChunkProvider ichunkprovider, int x, int z) {
+   public void populate(int x, int z) {
 /* 227 */     TimeAnalyzer.start("populate"); int i;
 /* 228 */     for (i = 0; i < this.unfinished.size(); i++) {
 /* 229 */       Planet p = this.unfinished.get(i);
@@ -270,29 +258,8 @@
 /* 254 */     c.enqueueRelightChecks();
 /* 255 */     TimeAnalyzer.end("populate");
    }
-   
-   public boolean saveChunks(boolean flag, IProgressUpdate iprogressupdate) {
-/* 259 */     return true;
-   }
-   
-   public boolean unloadQueuedChunks() {
-/* 263 */     return false;
-   }
-   
-   public boolean canSave() {
-/* 267 */     return true;
-   }
-   
-   public String makeString() {
-/* 271 */     return "Planetoid";
-   }
 
-	 //@Override
-	 public boolean isChunkGeneratedAt(int i, int i1) {
-		 return false;
-	 }
-
-	 public List<Biome.SpawnListEntry> getPossibleCreatures(EnumCreatureType type, int i, int j, int k) {
+	 public List<Biome.SpawnListEntry> getPossibleCreatures(EnumCreatureType type, BlockPos blockPos) {
 /* 275 */     ArrayList<Biome.SpawnListEntry> list = new ArrayList<Biome.SpawnListEntry>();
      
 /* 277 */     if (type == EnumCreatureType.MONSTER) {
@@ -309,23 +276,20 @@
      } 
 /* 289 */     return list;
    }
- 
-   
-   public ChunkPos func_147416_a(World world, String s, int i, int j, int k) {
-/* 294 */     return null;
-   }
- 
-   
-   public int getLoadedChunkCount() {
-/* 299 */     return 0;
-   }
- 
- 
-   
-   public void recreateStructures(int i, int j) {}
- 
+
+     @org.jetbrains.annotations.Nullable
+     @Override
+     public BlockPos getNearestStructurePos(World world, String s, BlockPos blockPos, boolean b) {
+         return null;
+     }
+
+    public boolean isInsideStructure(World w, String structureName, BlockPos blockPos){return false;}
+    public boolean generateStructures(Chunk c, int i, int j){return false;}
+    public void recreateStructures(Chunk c,int i, int j){}
+
    
    public void cleanupCache() {}
+   public Chunk generateChunk(int x,int z){return getLoadedChunk(x,z);}
  
    
    public static int round(double d) {

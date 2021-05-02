@@ -1,6 +1,6 @@
  package tennox.planetoid;
 
- import net.minecraft.world.WorldServer;
+ //import net.minecraft.world.WorldServer;
  import net.minecraft.world.chunk.IChunkProvider;
  import net.minecraft.world.gen.IChunkGenerator;
  import net.minecraftforge.fml.relauncher.Side;
@@ -9,18 +9,20 @@
  import net.minecraft.client.gui.GuiCreateWorld;
  import net.minecraft.world.World;
  import net.minecraft.world.WorldType;
+ import net.minecraftforge.event.terraingen.WorldTypeEvent;
  import net.minecraft.world.chunk.Chunk;
+ import net.minecraft.world.WorldProvider;
 
  public class PlanetoidWorld extends WorldType {
    public PlanetoidWorld(String name) {
 /* 14 */     super(name);
    }
 
-   public Chunk getChunkManager(World world) {
+   public IChunkGenerator getChunkManager(World world) {
 /* 18 */     return new PlanetoidChunkManager(world);
    }
 
-   public IChunkProvider getChunkGenerator(WorldServer world, String generatorOptions) {
+   public IChunkGenerator getChunkGenerator(World world, String generatorOptions) {
 /* 22 */     return new PlanetoidChunkManager(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), generatorOptions);
    }
 
