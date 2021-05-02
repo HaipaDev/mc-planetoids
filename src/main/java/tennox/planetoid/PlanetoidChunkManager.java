@@ -49,7 +49,7 @@
 
  public class PlanetoidChunkManager
          implements IChunkGenerator {
-/*  46 */   Random rand = new Random();
+    Random rand = new Random();
    long seed;
    World world;
    boolean mapFeaturesEnabled;
@@ -91,10 +91,15 @@
 /*  87 */       Planetoid.logger.info("PlanetoidChunkManager initialized with these settings: \"" + this.generatorInfo.toString() + "\""); 
    }
 
+   public boolean chunkExists(int i, int j) {
+/*  91 */     return true;
+   }
+
+
 	 @Nullable
 	 //@Override
 	 public Chunk getLoadedChunk(int i, int i1) {
-		 return null;
+		 return provideChunk(i,i1);
 	 }
 
 	 public Chunk provideChunk(int par1, int par2) {
@@ -123,11 +128,11 @@
 /* 116 */     TimeAnalyzer.end("provide_default");
      
 /* 118 */     Chunk chunk = new Chunk(this.world, par1, par2);
-/* 119 */     byte[] abyte1 = chunk.getBiomeArray();
+/* 119 */     /*byte[] abyte1 = chunk.getBiomeArray();
      
-/* 121 */     for (int k = 0; k < abyte1.length; k++) {
-/* 122 */       abyte1[k] = (byte)Biome.getIdForBiome(this.biomesForGeneration.get(k));
-     }
+             for (int k = 0; k < abyte1.length; k++) {
+            abyte1[k] = (byte)Biome.getIdForBiome(this.biomesForGeneration.get(k));
+             }*/
      
 /* 125 */     chunk.generateSkylightMap();
  
@@ -195,7 +200,7 @@
      } 
 /* 189 */     TimeAnalyzer.end("pregenerate_do");
    }
-   
+
    public void generatePlanetoid(int chunkX, int chunkZ, Block[] ablock, byte[] ameta) {
 /* 193 */     TimeAnalyzer.start("generate");
      
@@ -203,7 +208,7 @@
 /* 196 */     for (int i = 0; i < this.unfinished.size(); i++) {
 /* 197 */       Planet p = this.unfinished.get(i);
 /* 198 */       if (p.shouldFinishChunk(chunkX, chunkZ))
-/* 199 */         p.generateChunk(chunkX, chunkZ, ablock, ameta); 
+/* 199 */         p.generateChunk(chunkX, chunkZ, ablock, ameta);
 /* 200 */       if (p.isFinished()) {
 /* 201 */         this.unfinished.remove(p);
 /* 202 */         this.finished.add(p);
@@ -220,8 +225,8 @@
 /* 213 */           if(this.generatorInfo.waterFloor)Planet.setBlock(x, y, z, (y == 0) ? Blocks.BEDROCK : Blocks.WATER, 0, ablock, ameta);
 					else {Planet.setBlock(x, y, z, (y == -1) ? Blocks.BEDROCK : Blocks.AIR, 0, ablock, ameta);}
          }
-       } 
-     } 
+       }
+     }
 /* 217 */     TimeAnalyzer.end("generateWater");
      
 /* 219 */     TimeAnalyzer.end("generate");
@@ -287,10 +292,10 @@
     public boolean generateStructures(Chunk c, int i, int j){return false;}
     public void recreateStructures(Chunk c,int i, int j){}
 
-   
+
    public void cleanupCache() {}
    public Chunk generateChunk(int x,int z){return getLoadedChunk(x,z);}
- 
+
    
    public static int round(double d) {
 /* 311 */     return (int)Math.round(d);
