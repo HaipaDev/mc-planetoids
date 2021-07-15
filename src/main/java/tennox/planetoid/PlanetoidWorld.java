@@ -21,7 +21,7 @@
    public IChunkGenerator getChunkManager(World world) {
 /* 18 */     return new PlanetoidChunkManager(world);
    }
-
+    @Override
    public IChunkGenerator getChunkGenerator(World world, String generatorOptions) {
 /* 22 */     return new PlanetoidChunkManager(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), generatorOptions);
    }

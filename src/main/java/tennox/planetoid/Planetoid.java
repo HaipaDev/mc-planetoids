@@ -1,19 +1,19 @@
  package tennox.planetoid;
 
-
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraft.block.BlockSand;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.world.WorldType;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.event.terraingen.PopulateChunkEvent;
-import org.apache.logging.log4j.Logger;
-import tennox.planetoid.config.PlanetoidConfig;
+ import net.minecraft.block.BlockSand;
+ import net.minecraft.client.resources.I18n;
+ import net.minecraft.world.WorldType;
+ import net.minecraftforge.common.MinecraftForge;
+ import net.minecraftforge.common.config.Configuration;
+ import net.minecraftforge.event.terraingen.PopulateChunkEvent;
+ import net.minecraftforge.fml.common.FMLCommonHandler;
+ import net.minecraftforge.fml.common.Mod;
+ import net.minecraftforge.fml.common.Mod.EventHandler;
+ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+ import tennox.planetoid.config.PlanetoidConfig;
+ //import java.util.logging.Logger;
+ //import org.apache.logging.log4j.Logger;
 
 
  @Mod(modid = "planetoid", name = "Planetoid", version = "0.10.0")
@@ -24,12 +24,12 @@ import tennox.planetoid.config.PlanetoidConfig;
 /* 22 */   public static WorldType planetoid = new PlanetoidWorld("planetoid");
    
    static Configuration config;
-   public static Logger logger;
+   //public static Logger logger;
 /* 26 */   int tick = 0;
    
    @EventHandler
    public void preInit(FMLPreInitializationEvent event) {
-/* 30 */     logger = event.getModLog();
+/* 30 */     //logger = event.getModLog();
 /* 31 */     MinecraftForge.EVENT_BUS.register(this);
 /* 32 */     FMLCommonHandler.instance().bus().register(this);
 
