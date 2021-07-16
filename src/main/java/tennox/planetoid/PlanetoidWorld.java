@@ -15,15 +15,15 @@
 
  public class PlanetoidWorld extends WorldType {
    public PlanetoidWorld(String name) {
-/* 14 */     super(name);
+    super(name);
    }
 
-   public IChunkGenerator getChunkManager(World world) {
-/* 18 */     return new PlanetoidChunkManager(world);
-   }
+   /*public IChunkGenerator getChunkManager(World world) {
+         return new PlanetoidChunkManager(world);
+   }*/
     @Override
    public IChunkGenerator getChunkGenerator(World world, String generatorOptions) {
-/* 22 */     return new PlanetoidChunkManager(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), generatorOptions);
+/* 22 */     return new PlanetoidChunkManager(world, generatorOptions);//, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), generatorOptions);
    }
 
    public int getSpawnFuzz() {
